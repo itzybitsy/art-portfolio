@@ -174,17 +174,21 @@
     }
 
     .dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      border: 1.5px solid #797979;
-      background: transparent;
+      border: none;
+      background: #d0d0d0;
       cursor: pointer;
       padding: 0;
-      transition: background 0.2s;
+      transition: width 0.25s ease, background 0.25s ease, border-radius 0.25s ease;
     }
 
-    .dot.active { background: #797979; }
+    .dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: #797979;
+    }
 
     /* ── Footer ── */
     footer {
