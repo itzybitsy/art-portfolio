@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itzy Ramirez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #fff;
+      color: #797979;
+      font-family: 'Nunito Sans', -apple-system, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 24px;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Page shell ── */
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-top: 75px;
+      margin-bottom: 48px;
+    }
+
+    .site-name {
+      font-family: 'Baskervville', Georgia, serif;
+      font-size: 25px;
+      font-weight: 400;
+      color: #000;
+      min-width: 144px;
+    }
+
+    .desktop-nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    .desktop-nav a {
+      font-size: 16px;
+      color: #7f7f7f;
+    }
+
+    .desktop-nav a:hover { color: #000; transition: color 0.15s; }
+
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .hamburger img { display: block; width: 100%; height: 100%; }
+
+    /* ── Mobile nav overlay ── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 100;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav-close {
+      position: absolute;
+      top: 75px;
+      right: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+    }
+
+    .mobile-nav-close img { display: block; width: 100%; }
+
+    .mobile-nav a {
+      font-family: 'Baskervville', Georgia, serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #000;
+      text-align: center;
+    }
+
+    .mobile-nav a:hover { color: #797979; }
+
+    /* ── Main ── */
+    main { flex: 1; }
+
+    .section-label {
+      font-size: 16px;
+      color: #797979;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    /* ── Work track (desktop: horizontal scroll carousel) ── */
+    .work-track-wrap { position: relative; }
+
+    .work-track {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      scroll-snap-type: x mandatory;
+      /* bleed past page padding so images can scroll to full-visible */
+      margin: 0 -32px;
+      padding: 0 32px;
+    }
+
+    .work-track::-webkit-scrollbar { display: none; }
+
+    .work-card {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scroll-snap-align: start;
+    }
+
+    .artwork-img {
+      display: block;
+      height: 420px;
+      width: auto;
+    }
+
+    .artwork-meta {
+      padding-left: 8px;
+      font-size: 16px;
+      color: #797979;
+      line-height: 24px;
+    }
+
+    .artwork-meta em { font-style: italic; }
+
+    /* ── Pagination dots ── */
+    .work-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 24px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid #797979;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s;
+    }
+
+    .dot.active { background: #797979; }
+
+    /* ── Footer ── */
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 52px 0 40px;
+      margin-top: 48px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .socials a { display: flex; align-items: center; }
+
+    .socials img {
+      display: block;
+      width: 18px;
+      height: 18px;
+    }
+
+    .copyright { font-size: 16px; color: #797979; }
+
+    /* ── Desktop wider screens ── */
+    @media (min-width: 640px) {
+      .site-name { min-width: auto; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 639px) {
+      .page { padding: 0 18px; }
+      .header { padding-top: 75px; margin-bottom: 28px; }
+      .desktop-nav { display: none; }
+      .hamburger { display: block; }
+
+      /* Vertical stack on mobile */
+      .work-track {
+        flex-direction: column;
+        overflow-x: visible;
+        margin: 0;
+        padding: 0;
+        gap: 16px;
+        scroll-snap-type: none;
+      }
+
+      .work-card { width: 100%; }
+
+      .artwork-img {
+        height: auto;
+        width: 100%;
+      }
+
+      .work-dots { display: none; }
+
+      footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 36px 0 32px;
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <a href="index.html" class="site-name">Itzy Ramirez</a>
+
+    <nav class="desktop-nav" aria-label="Site navigation">
+      <a href="index.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="#contact">contact</a>
+    </nav>
+
+    <button class="hamburger" aria-label="Open navigation" onclick="openNav()">
+      <img src="assets/ham-menu.svg" alt="">
+    </button>
+  </header>
+
+  <main>
+    <p class="section-label">Selected work</p>
+
+    <div class="work-track-wrap">
+      <div class="work-track" id="workTrack">
+
+        <div class="work-card">
+          <img class="artwork-img" src="assets/purple-nopales.png" alt="Technicolor Nopales, 2024">
+          <div class="artwork-meta">
+            <p>Title: <em>Technicolor Nopales</em></p>
+            <p>Medium: Watercolor on paper and pencil</p>
+            <p>Dimension:&nbsp; 8" X 10"</p>
+            <p>Year: 2024</p>
+          </div>
+        </div>
+
+        <div class="work-card">
+          <img class="artwork-img" src="assets/orange-flower-nopal.png" alt="The Resilient Nopales, 2024">
+          <div class="artwork-meta">
+            <p>Title: <em>The Resilient Nopales</em></p>
+            <p>Medium: Watercolor on paper and pencil</p>
+            <p>Dimension:&nbsp; 8" X 12"</p>
+            <p>Year: 2024</p>
+          </div>
+        </div>
+
+        <div class="work-card">
+          <img class="artwork-img" src="assets/blue-nopales.png" alt="Blue Nopales, 2024">
+          <div class="artwork-meta">
+            <p>Title: <em>Blue Nopales</em></p>
+            <p>Medium: Watercolor on paper and pencil</p>
+            <p>Dimension:&nbsp; 8" X 10"</p>
+            <p>Year: 2024</p>
+          </div>
+        </div>
+
+        <div class="work-card">
+          <img class="artwork-img" src="assets/xochitl-nopalli.png" alt="Resilient Nopales, 2024">
+          <div class="artwork-meta">
+            <p>Title: <em>Resilient Nopales</em></p>
+            <p>Medium: Watercolor on paper and pencil</p>
+            <p>Dimension:&nbsp; 8" X 12"</p>
+            <p>Year: 2024</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="work-dots" role="tablist" aria-label="Artwork navigation" id="workDots">
+        <button class="dot active" aria-label="Artwork 1" onclick="scrollToCard(0)"></button>
+        <button class="dot" aria-label="Artwork 2" onclick="scrollToCard(1)"></button>
+        <button class="dot" aria-label="Artwork 3" onclick="scrollToCard(2)"></button>
+        <button class="dot" aria-label="Artwork 4" onclick="scrollToCard(3)"></button>
+      </div>
+    </div>
+  </main>
+
+  <footer id="contact">
+    <div class="socials">
+      <a href="https://www.instagram.com/itzyra/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <img src="assets/instagram.svg" alt="Instagram">
+      </a>
+      <a href="mailto:itzyra@gmail.com" aria-label="Email">
+        <img src="assets/email.svg" alt="Email">
+      </a>
+    </div>
+    <span class="copyright">© 2026 Itzy Ramirez. All rights reserved.</span>
+  </footer>
+
+</div>
+
+<!-- Mobile nav overlay -->
+<div id="mobileNav" class="mobile-nav" role="dialog" aria-label="Navigation" aria-modal="true">
+  <button class="mobile-nav-close" aria-label="Close navigation" onclick="closeNav()">
+    <img src="assets/ham-menu-close.svg" alt="">
+  </button>
+  <a href="index.html" onclick="closeNav()">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact" onclick="closeNav()">Contact</a>
+</div>
+
+<script>
+  function openNav() {
+    document.getElementById('mobileNav').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNav() {
+    document.getElementById('mobileNav').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* Carousel dots */
+  var track = document.getElementById('workTrack');
+  var dots = document.querySelectorAll('#workDots .dot');
+  var cards = Array.from(track.querySelectorAll('.work-card'));
+
+  function scrollToCard(i) {
+    var card = cards[i];
+    track.scrollTo({ left: card.offsetLeft - 32, behavior: 'smooth' });
+  }
+
+  track.addEventListener('scroll', function() {
+    var best = 0, bestDist = Infinity;
+    var origin = track.getBoundingClientRect().left;
+    cards.forEach(function(card, i) {
+      var dist = Math.abs(card.getBoundingClientRect().left - origin);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === best); });
+  });
+</script>
+
+</body>
+</html>
