@@ -357,6 +357,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script>
+  // Redirect auth tokens (password reset, invite) to the admin page
+  if (window.location.hash && window.location.hash.includes('access_token')) {
+    window.location.replace('/admin' + window.location.hash);
+  }
+
   function openNav() {
     document.getElementById('mobileNav').classList.add('open');
     document.body.style.overflow = 'hidden';
