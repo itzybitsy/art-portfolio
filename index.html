@@ -93,7 +93,7 @@
 
     .mobile-nav-close {
       position: absolute;
-      top: 75px;
+      top: 40px;
       right: 18px;
       background: none;
       border: none;
@@ -136,9 +136,6 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       scroll-snap-type: x mandatory;
-      /* bleed past page padding so images can scroll to full-visible */
-      margin: 0 -32px;
-      padding: 0 32px;
     }
 
     .work-track::-webkit-scrollbar { display: none; }
@@ -231,8 +228,6 @@
       .work-track {
         flex-direction: column;
         overflow-x: visible;
-        margin: 0;
-        padding: 0;
         gap: 16px;
         scroll-snap-type: none;
       }
