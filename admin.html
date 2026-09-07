@@ -533,6 +533,8 @@
       msgEl.innerHTML = '<div class="msg-error">' + esc(result.error.message) + '</div>';
       btn.disabled = false;
       btn.textContent = 'Sign In';
+    } else {
+      showAdmin();
     }
   });
 
