@@ -304,6 +304,8 @@
   <a href="mailto:itzyra@gmail.com">Contact</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script>
   function openNav() {
     document.getElementById('mobileNav').classList.add('open');
@@ -313,6 +315,48 @@
     document.getElementById('mobileNav').classList.remove('open');
     document.body.style.overflow = '';
   }
+
+  // ── Supabase: load about content dynamically ──
+  (function () {
+    var configured = window.SUPABASE_URL && !window.SUPABASE_URL.includes('YOUR_PROJECT_ID');
+    if (!configured) return;
+
+    var sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+    sb.from('about_content').select('*').eq('id', 1).single()
+      .then(function (result) {
+        if (result.error || !result.data) return;
+        var d = result.data;
+
+        // Bio — stored with optional HTML markup
+        if (d.bio) {
+          var bioEl = document.querySelector('.about-section:nth-child(1) p');
+          if (bioEl) bioEl.innerHTML = d.bio;
+        }
+
+        // Artist Statement
+        if (d.artist_statement) {
+          var stEl = document.querySelector('.about-section:nth-child(2) p');
+          if (stEl) stEl.textContent = d.artist_statement;
+        }
+
+        // Exhibitions
+        if (Array.isArray(d.exhibitions) && d.exhibitions.length) {
+          var listEl = document.querySelector('.exhibitions-list');
+          if (listEl) {
+            listEl.innerHTML = d.exhibitions.map(function (ex) {
+              var line = '<em>' + esc(ex.title || '') + '</em>';
+              if (ex.venue) line += ' ' + esc(ex.venue);
+              return '<p class="exhibition-entry">' + line + '</p>';
+            }).join('');
+          }
+        }
+      });
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  })();
 </script>
 
 </body>

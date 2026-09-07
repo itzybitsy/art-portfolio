@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Itzy Ramirez Art</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #f5f5f3;
+      color: #222;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* ── Login ── */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+    }
+
+    .login-card h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .login-card .subtitle {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Forms ── */
+    .form-group { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #e2e2e2;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #222;
+      background: #fff;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #999;
+    }
+
+    textarea { resize: vertical; min-height: 110px; line-height: 1.55; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, opacity 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-primary   { background: #1a1a1a; color: #fff; }
+    .btn-primary:hover { background: #333; }
+    .btn-secondary { background: #ebebeb; color: #222; }
+    .btn-secondary:hover { background: #e0e0e0; }
+    .btn-danger    { background: #fde8e8; color: #b91c1c; }
+    .btn-danger:hover { background: #fbd0d0; }
+    .btn-sm  { padding: 6px 12px; font-size: 12px; }
+    .btn-full { width: 100%; justify-content: center; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ── Messages ── */
+    .msg-error   { background: #fde8e8; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+    .msg-success { background: #dcfce7; color: #166534; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+    .msg-info    { background: #eff6ff; color: #1d4ed8; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+
+    /* ── Setup notice ── */
+    .setup-wrap { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 48px 24px; }
+
+    .setup-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 36px;
+      width: 100%;
+      max-width: 680px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+    }
+
+    .setup-card h1 { font-size: 18px; font-weight: 700; color: #111; margin-bottom: 6px; }
+    .setup-card > p { font-size: 14px; color: #666; margin-bottom: 28px; }
+
+    .step {
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .step h3 { font-size: 14px; font-weight: 600; color: #111; margin-bottom: 8px; }
+    .step p  { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 6px; }
+    .step p:last-child { margin-bottom: 0; }
+
+    code {
+      background: #f3f3f3;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 12px;
+      color: #c7254e;
+    }
+
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 11.5px;
+      line-height: 1.65;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    /* ── Admin layout ── */
+    .admin-wrap { display: none; min-height: 100vh; flex-direction: column; }
+    .admin-wrap.visible { display: flex; }
+
+    .admin-header {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 0 24px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .admin-logo { font-size: 14px; font-weight: 600; color: #111; letter-spacing: -0.01em; }
+
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .header-actions a { font-size: 13px; color: #888; text-decoration: none; }
+    .header-actions a:hover { color: #222; }
+
+    .admin-tabs {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex;
+      padding: 0 24px;
+    }
+
+    .tab-btn {
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .tab-btn.active { color: #111; border-bottom-color: #111; }
+    .tab-btn:hover { color: #111; }
+
+    .admin-content {
+      flex: 1;
+      padding: 28px 24px;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ── Section header ── */
+    .section-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .section-hd h2 { font-size: 16px; font-weight: 600; color: #111; }
+
+    /* ── Artwork form ── */
+    .artwork-form-wrap {
+      background: #fff;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .artwork-form-wrap h3 { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 20px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .form-group-inline { margin-bottom: 0; }
+
+    /* ── Upload area ── */
+    .upload-area {
+      border: 2px dashed #d4d4d4;
+      border-radius: 10px;
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .upload-area:hover, .upload-area.drag-over {
+      border-color: #888;
+      background: #fafafa;
+    }
+
+    .upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-icon { font-size: 30px; margin-bottom: 10px; }
+    .upload-text { font-size: 13px; color: #888; }
+    .upload-text strong { color: #333; }
+
+    .preview-img {
+      width: 100%;
+      max-height: 260px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #f5f5f5;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .preview-img.visible { display: block; }
+
+    .preview-change {
+      font-size: 12px;
+      color: #888;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .preview-change.visible { display: inline; }
+
+    /* ── Artwork list ── */
+    .artwork-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .artwork-row {
+      background: #fff;
+      border: 1px solid #ebebeb;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .artwork-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #f0f0f0;
+    }
+
+    .artwork-info { flex: 1; min-width: 0; }
+
+    .art-title {
+      font-weight: 600;
+      font-size: 13px;
+      color: #111;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
+
+    .art-meta { font-size: 12px; color: #999; }
+
+    .artwork-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+    .order-btns { display: flex; flex-direction: column; gap: 3px; }
+
+    .order-btn {
+      background: none;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      width: 26px;
+      height: 22px;
+      cursor: pointer;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      line-height: 1;
+    }
+
+    .order-btn:hover { background: #f0f0f0; }
+    .order-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ── About tab ── */
+    .about-block {
+      background: #fff;
+      border: 1px solid #ebebeb;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .about-block h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 14px;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── Exhibitions ── */
+    .exhibition-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .exhibition-item input { margin: 0; }
+
+    /* ── Loading ── */
+    .empty-state {
+      color: #aaa;
+      font-size: 13px;
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+      .exhibition-item { grid-template-columns: 1fr auto; }
+      .exhibition-item input:nth-child(2) { grid-column: 1; }
+      .admin-content { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Setup notice (shown when config.js still has placeholder values) -->
+<div id="setupWrap" class="setup-wrap" hidden>
+  <div class="setup-card">
+    <h1>Set up Supabase to continue</h1>
+    <p>Follow these steps once, then come back here to manage your portfolio.</p>
+
+    <div class="step">
+      <div class="step-label">Step 1</div>
+      <h3>Create a free Supabase project</h3>
+      <p>Go to <strong>supabase.com</strong> → New project. Choose any name and region.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 2</div>
+      <h3>Run this SQL in your Supabase SQL Editor</h3>
+      <p>Go to SQL Editor → New query, paste this, and click Run:</p>
+      <pre id="sqlSetup"></pre>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 3</div>
+      <h3>Create the artwork images bucket</h3>
+      <p>Go to <strong>Storage → New bucket</strong>, name it <code>artwork-images</code>, and toggle <strong>Public bucket</strong> on.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 4</div>
+      <h3>Create your admin account</h3>
+      <p>Go to <strong>Authentication → Users → Invite user</strong>. Use your email and set a password.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 5</div>
+      <h3>Fill in <code>config.js</code></h3>
+      <p>Go to <strong>Settings → API</strong> in your Supabase project. Copy the <strong>Project URL</strong> and <strong>anon / public key</strong> and paste them into <code>config.js</code> in this folder.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 6</div>
+      <h3>Push to GitHub and Vercel will redeploy automatically</h3>
+      <p>Once deployed, come back to <code>/admin</code> to log in and start adding your artwork.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Login screen -->
+<div id="loginWrap" class="login-wrap" hidden>
+  <div class="login-card">
+    <h1>Admin</h1>
+    <p class="subtitle">Itzy Ramirez Art Portfolio</p>
+    <div id="loginMsg"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="emailInput" autocomplete="email" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="passwordInput" autocomplete="current-password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<!-- Admin panel -->
+<div id="adminWrap" class="admin-wrap">
+
+  <header class="admin-header">
+    <span class="admin-logo">Itzy Ramirez — Admin</span>
+    <div class="header-actions">
+      <a href="index.html" target="_blank">View site ↗</a>
+      <button class="btn btn-secondary btn-sm" id="logoutBtn">Sign out</button>
+    </div>
+  </header>
+
+  <div class="admin-tabs">
+    <button class="tab-btn active" data-tab="artworks">Artworks</button>
+    <button class="tab-btn" data-tab="about">About page</button>
+  </div>
+
+  <!-- ─ Artworks tab ─ -->
+  <div class="admin-content" id="tab-artworks">
+
+    <!-- Add / Edit form -->
+    <div id="artworkFormWrap" class="artwork-form-wrap" hidden>
+      <h3 id="artworkFormTitle">Add new artwork</h3>
+      <div id="artworkFormMsg"></div>
+
+      <img id="previewImg" class="preview-img" src="" alt="">
+      <span id="previewChange" class="preview-change" onclick="resetImagePicker()">Change image</span>
+
+      <div class="upload-area" id="uploadArea">
+        <input type="file" id="imageFile" accept="image/*">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text"><strong>Click to choose</strong> or drag &amp; drop<br>PNG · JPG · WEBP</div>
+      </div>
+
+      <div class="form-group">
+        <label>Title *</label>
+        <input type="text" id="artTitle" placeholder="e.g. Technicolor Nopales">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-group-inline">
+          <label>Medium</label>
+          <input type="text" id="artMedium" placeholder="Watercolor on paper and pencil">
+        </div>
+        <div class="form-group form-group-inline">
+          <label>Dimension</label>
+          <input type="text" id="artDimension" placeholder='8" X 10"'>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:20px">
+        <label>Year</label>
+        <input type="number" id="artYear" placeholder="2024" style="max-width:120px">
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-primary" id="saveArtworkBtn">Save artwork</button>
+        <button class="btn btn-secondary" id="cancelArtworkBtn">Cancel</button>
+      </div>
+    </div>
+
+    <div class="section-hd">
+      <h2>Artworks</h2>
+      <button class="btn btn-primary btn-sm" id="addArtworkBtn">+ Add new</button>
+    </div>
+
+    <div id="artworksList" class="artwork-list">
+      <div class="empty-state">Loading…</div>
+    </div>
+  </div>
+
+  <!-- ─ About tab ─ -->
+  <div class="admin-content" id="tab-about" hidden>
+
+    <div class="section-hd">
+      <h2>About page</h2>
+    </div>
+
+    <div id="aboutSaveMsg"></div>
+
+    <div class="about-block">
+      <h3>Bio</h3>
+      <div class="form-group" style="margin-bottom:0">
+        <textarea id="bioInput" rows="5" placeholder="Write your bio here…"></textarea>
+        <p class="field-hint">You can use HTML for formatting: <code>&lt;em&gt;text&lt;/em&gt;</code> for italic · <code>&lt;a href="URL"&gt;text&lt;/a&gt;</code> for links</p>
+      </div>
+    </div>
+
+    <div class="about-block">
+      <h3>Artist Statement</h3>
+      <div class="form-group" style="margin-bottom:0">
+        <textarea id="statementInput" rows="8" placeholder="Write your artist statement here…"></textarea>
+      </div>
+    </div>
+
+    <div class="about-block">
+      <h3>Exhibitions</h3>
+      <p style="font-size:12px;color:#999;margin-bottom:16px">Title appears in italic. Venue and date in regular text.</p>
+      <div id="exhibitionsList"></div>
+      <button class="btn btn-secondary btn-sm" id="addExhibitionBtn" style="margin-top:4px">+ Add exhibition</button>
+    </div>
+
+    <button class="btn btn-primary" id="saveAboutBtn">Save about page</button>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+(function () {
+  // ── Config check ──
+  var configured = window.SUPABASE_URL &&
+    !window.SUPABASE_URL.includes('YOUR_PROJECT_ID') &&
+    window.SUPABASE_ANON_KEY &&
+    !window.SUPABASE_ANON_KEY.includes('YOUR_ANON_KEY');
+
+  var SQL = `-- Run in Supabase SQL Editor → New Query
+
+create table if not exists public.artworks (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  medium text default '',
+  dimension text default '',
+  year integer,
+  image_url text not null,
+  display_order integer default 0,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.about_content (
+  id integer primary key default 1,
+  bio text default '',
+  artist_statement text default '',
+  exhibitions jsonb default '[]'::jsonb,
+  updated_at timestamptz default now()
+);
+
+alter table public.artworks enable row level security;
+alter table public.about_content enable row level security;
+
+create policy "Public read artworks"
+  on public.artworks for select to anon, authenticated using (true);
+
+create policy "Auth manage artworks"
+  on public.artworks for all to authenticated
+  using (true) with check (true);
+
+create policy "Public read about"
+  on public.about_content for select to anon, authenticated using (true);
+
+create policy "Auth manage about"
+  on public.about_content for all to authenticated
+  using (true) with check (true);
+
+-- Storage: after creating the "artwork-images" bucket set it to Public.
+-- The bucket RLS is handled automatically for public buckets.
+
+insert into public.about_content (id) values (1) on conflict (id) do nothing;`;
+
+  document.getElementById('sqlSetup').textContent = SQL;
+
+  if (!configured) {
+    document.getElementById('setupWrap').hidden = false;
+    return;
+  }
+
+  // ── Init Supabase ──
+  var sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+  // ── Auth state ──
+  sb.auth.onAuthStateChange(function (event, session) {
+    if (session) {
+      showAdmin();
+    } else {
+      showLogin();
+    }
+  });
+
+  function showLogin() {
+    document.getElementById('loginWrap').hidden = false;
+    document.getElementById('adminWrap').classList.remove('visible');
+  }
+
+  function showAdmin() {
+    document.getElementById('loginWrap').hidden = true;
+    document.getElementById('adminWrap').classList.add('visible');
+    loadArtworks();
+    loadAbout();
+  }
+
+  // Login form
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('loginBtn');
+    var msgEl = document.getElementById('loginMsg');
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    msgEl.innerHTML = '';
+    var result = await sb.auth.signInWithPassword({
+      email: document.getElementById('emailInput').value,
+      password: document.getElementById('passwordInput').value,
+    });
+    if (result.error) {
+      msgEl.innerHTML = '<div class="msg-error">' + esc(result.error.message) + '</div>';
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    sb.auth.signOut();
+  });
+
+  // ── Tabs ──
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var tab = btn.dataset.tab;
+      document.getElementById('tab-artworks').hidden = tab !== 'artworks';
+      document.getElementById('tab-about').hidden = tab !== 'about';
+    });
+  });
+
+  // ── Artwork form state ──
+  var editingId = null;
+  var selectedFile = null;
+  var currentImageUrl = null;
+
+  function resetForm() {
+    editingId = null;
+    selectedFile = null;
+    currentImageUrl = null;
+    document.getElementById('artTitle').value = '';
+    document.getElementById('artMedium').value = '';
+    document.getElementById('artDimension').value = '';
+    document.getElementById('artYear').value = '';
+    document.getElementById('imageFile').value = '';
+    document.getElementById('previewImg').src = '';
+    document.getElementById('previewImg').classList.remove('visible');
+    document.getElementById('previewChange').classList.remove('visible');
+    document.getElementById('uploadArea').style.display = '';
+    document.getElementById('artworkFormMsg').innerHTML = '';
+    document.getElementById('artworkFormTitle').textContent = 'Add new artwork';
+  }
+
+  window.resetImagePicker = function () {
+    selectedFile = null;
+    document.getElementById('imageFile').value = '';
+    document.getElementById('previewImg').classList.remove('visible');
+    document.getElementById('previewChange').classList.remove('visible');
+    document.getElementById('uploadArea').style.display = '';
+  };
+
+  document.getElementById('addArtworkBtn').addEventListener('click', function () {
+    resetForm();
+    document.getElementById('artworkFormWrap').hidden = false;
+    document.getElementById('artworkFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('cancelArtworkBtn').addEventListener('click', function () {
+    resetForm();
+    document.getElementById('artworkFormWrap').hidden = true;
+  });
+
+  // Image selection
+  document.getElementById('imageFile').addEventListener('change', function (e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    selectedFile = file;
+    showPreview(URL.createObjectURL(file));
+  });
+
+  function showPreview(url) {
+    var img = document.getElementById('previewImg');
+    img.src = url;
+    img.classList.add('visible');
+    document.getElementById('previewChange').classList.add('visible');
+    document.getElementById('uploadArea').style.display = 'none';
+  }
+
+  // Drag & drop
+  var uploadArea = document.getElementById('uploadArea');
+  uploadArea.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    uploadArea.classList.add('drag-over');
+  });
+  uploadArea.addEventListener('dragleave', function () {
+    uploadArea.classList.remove('drag-over');
+  });
+  uploadArea.addEventListener('drop', function (e) {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+    var file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      selectedFile = file;
+      showPreview(URL.createObjectURL(file));
+    }
+  });
+
+  // Save artwork
+  document.getElementById('saveArtworkBtn').addEventListener('click', async function () {
+    var title = document.getElementById('artTitle').value.trim();
+    if (!title) { setFormMsg('Please enter a title.', 'error'); return; }
+    if (!editingId && !selectedFile) { setFormMsg('Please choose an image.', 'error'); return; }
+
+    var btn = document.getElementById('saveArtworkBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    var imageUrl = currentImageUrl;
+
+    if (selectedFile) {
+      setFormMsg('Uploading image…', 'info');
+      var ext = selectedFile.name.split('.').pop().toLowerCase();
+      var filename = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+      var uploadResult = await sb.storage
+        .from('artwork-images')
+        .upload(filename, selectedFile, { cacheControl: '3600', upsert: false });
+      if (uploadResult.error) {
+        setFormMsg('Upload failed: ' + uploadResult.error.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Save artwork';
+        return;
+      }
+      var urlResult = sb.storage.from('artwork-images').getPublicUrl(filename);
+      imageUrl = urlResult.data.publicUrl;
+    }
+
+    var data = {
+      title: title,
+      medium: document.getElementById('artMedium').value.trim(),
+      dimension: document.getElementById('artDimension').value.trim(),
+      year: parseInt(document.getElementById('artYear').value) || null,
+      image_url: imageUrl,
+    };
+
+    var dbResult;
+    if (editingId) {
+      dbResult = await sb.from('artworks').update(data).eq('id', editingId);
+    } else {
+      var orderResult = await sb.from('artworks')
+        .select('display_order')
+        .order('display_order', { ascending: false })
+        .limit(1);
+      var lastOrder = (orderResult.data && orderResult.data.length > 0)
+        ? orderResult.data[0].display_order
+        : -1;
+      data.display_order = lastOrder + 1;
+      dbResult = await sb.from('artworks').insert(data);
+    }
+
+    if (dbResult.error) {
+      setFormMsg('Save failed: ' + dbResult.error.message, 'error');
+    } else {
+      resetForm();
+      document.getElementById('artworkFormWrap').hidden = true;
+      loadArtworks();
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Save artwork';
+  });
+
+  function setFormMsg(text, type) {
+    document.getElementById('artworkFormMsg').innerHTML =
+      '<div class="msg-' + (type === 'error' ? 'error' : type === 'success' ? 'success' : 'info') + '" style="margin-bottom:14px">' + esc(text) + '</div>';
+  }
+
+  // ── Load artworks ──
+  async function loadArtworks() {
+    var list = document.getElementById('artworksList');
+    list.innerHTML = '<div class="empty-state">Loading…</div>';
+    var result = await sb.from('artworks').select('*').order('display_order', { ascending: true });
+    if (result.error) {
+      list.innerHTML = '<div class="msg-error">' + esc(result.error.message) + '</div>';
+      return;
+    }
+    if (!result.data.length) {
+      list.innerHTML = '<div class="empty-state">No artworks yet. Click "+ Add new" to get started.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    result.data.forEach(function (art, idx) {
+      var row = document.createElement('div');
+      row.className = 'artwork-row';
+      var metaParts = [];
+      if (art.medium) metaParts.push(art.medium);
+      if (art.dimension) metaParts.push(art.dimension);
+      if (art.year) metaParts.push(art.year);
+      row.innerHTML =
+        '<img class="artwork-thumb" src="' + esc(art.image_url) + '" alt="' + esc(art.title) + '" loading="lazy">' +
+        '<div class="artwork-info">' +
+          '<div class="art-title">' + esc(art.title) + '</div>' +
+          '<div class="art-meta">' + esc(metaParts.join(' · ')) + '</div>' +
+        '</div>' +
+        '<div class="artwork-actions">' +
+          '<div class="order-btns">' +
+            '<button class="order-btn" title="Move up" ' + (idx === 0 ? 'disabled' : '') +
+              ' onclick="moveArtwork(\'' + art.id + '\',-1)">▲</button>' +
+            '<button class="order-btn" title="Move down" ' + (idx === result.data.length - 1 ? 'disabled' : '') +
+              ' onclick="moveArtwork(\'' + art.id + '\',1)">▼</button>' +
+          '</div>' +
+          '<button class="btn btn-secondary btn-sm" onclick="editArtwork(\'' + art.id + '\')">Edit</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteArtwork(\'' + art.id + '\',\'' + esc(art.title) + '\')">Delete</button>' +
+        '</div>';
+      list.appendChild(row);
+    });
+  }
+
+  window.editArtwork = async function (id) {
+    var result = await sb.from('artworks').select('*').eq('id', id).single();
+    if (result.error || !result.data) return;
+    var art = result.data;
+    editingId = id;
+    currentImageUrl = art.image_url;
+    document.getElementById('artTitle').value = art.title;
+    document.getElementById('artMedium').value = art.medium || '';
+    document.getElementById('artDimension').value = art.dimension || '';
+    document.getElementById('artYear').value = art.year || '';
+    showPreview(art.image_url);
+    document.getElementById('artworkFormTitle').textContent = 'Edit artwork';
+    document.getElementById('artworkFormWrap').hidden = false;
+    document.getElementById('artworkFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.deleteArtwork = async function (id, title) {
+    if (!confirm('Delete "' + title + '"?\nThis cannot be undone.')) return;
+    await sb.from('artworks').delete().eq('id', id);
+    loadArtworks();
+  };
+
+  window.moveArtwork = async function (id, direction) {
+    var result = await sb.from('artworks')
+      .select('id, display_order')
+      .order('display_order', { ascending: true });
+    if (result.error) return;
+    var all = result.data;
+    var idx = all.findIndex(function (a) { return a.id === id; });
+    var swapIdx = idx + direction;
+    if (swapIdx < 0 || swapIdx >= all.length) return;
+    await sb.from('artworks').update({ display_order: all[swapIdx].display_order }).eq('id', all[idx].id);
+    await sb.from('artworks').update({ display_order: all[idx].display_order }).eq('id', all[swapIdx].id);
+    loadArtworks();
+  };
+
+  // ── About tab ──
+  var exhibitions = [];
+
+  async function loadAbout() {
+    var result = await sb.from('about_content').select('*').eq('id', 1).single();
+    if (result.error || !result.data) return;
+    var d = result.data;
+    document.getElementById('bioInput').value = d.bio || '';
+    document.getElementById('statementInput').value = d.artist_statement || '';
+    exhibitions = Array.isArray(d.exhibitions) ? d.exhibitions : [];
+    renderExhibitions();
+  }
+
+  function renderExhibitions() {
+    var container = document.getElementById('exhibitionsList');
+    container.innerHTML = '';
+    exhibitions.forEach(function (ex, i) {
+      var row = document.createElement('div');
+      row.className = 'exhibition-item';
+      var titleInput = document.createElement('input');
+      titleInput.type = 'text';
+      titleInput.value = ex.title || '';
+      titleInput.placeholder = 'Exhibition title (shown italic)';
+      titleInput.addEventListener('input', function () { exhibitions[i].title = this.value; });
+      var venueInput = document.createElement('input');
+      venueInput.type = 'text';
+      venueInput.value = ex.venue || '';
+      venueInput.placeholder = 'Venue, City, Month Year';
+      venueInput.addEventListener('input', function () { exhibitions[i].venue = this.value; });
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger btn-sm';
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', function () {
+        exhibitions.splice(i, 1);
+        renderExhibitions();
+      });
+      row.appendChild(titleInput);
+      row.appendChild(venueInput);
+      row.appendChild(delBtn);
+      container.appendChild(row);
+    });
+  }
+
+  document.getElementById('addExhibitionBtn').addEventListener('click', function () {
+    exhibitions.push({ title: '', venue: '' });
+    renderExhibitions();
+  });
+
+  document.getElementById('saveAboutBtn').addEventListener('click', async function () {
+    var btn = document.getElementById('saveAboutBtn');
+    var msgEl = document.getElementById('aboutSaveMsg');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    msgEl.innerHTML = '';
+    var result = await sb.from('about_content').upsert({
+      id: 1,
+      bio: document.getElementById('bioInput').value,
+      artist_statement: document.getElementById('statementInput').value,
+      exhibitions: exhibitions,
+      updated_at: new Date().toISOString(),
+    });
+    if (result.error) {
+      msgEl.innerHTML = '<div class="msg-error" style="margin-bottom:14px">' + esc(result.error.message) + '</div>';
+    } else {
+      msgEl.innerHTML = '<div class="msg-success" style="margin-bottom:14px">About page saved!</div>';
+      setTimeout(function () { msgEl.innerHTML = ''; }, 3000);
+    }
+    btn.disabled = false;
+    btn.textContent = 'Save about page';
+  });
+
+  function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+})();
+</script>
+
+</body>
+</html>

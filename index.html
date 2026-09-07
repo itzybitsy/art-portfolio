@@ -354,6 +354,8 @@
   <a href="mailto:itzyra@gmail.com" onclick="closeNav()">Contact</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script>
   function openNav() {
     document.getElementById('mobileNav').classList.add('open');
@@ -383,6 +385,60 @@
     });
     dots.forEach(function(d, i) { d.classList.toggle('active', i === best); });
   });
+
+  // ── Supabase: load artworks dynamically ──
+  (function () {
+    var configured = window.SUPABASE_URL && !window.SUPABASE_URL.includes('YOUR_PROJECT_ID');
+    if (!configured) return;
+
+    var sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+    sb.from('artworks').select('*').order('display_order', { ascending: true })
+      .then(function (result) {
+        if (result.error || !result.data || !result.data.length) return;
+
+        var artworks = result.data;
+        var trackEl = document.getElementById('workTrack');
+        var dotsWrap = document.getElementById('workDots');
+
+        trackEl.innerHTML = artworks.map(function (art) {
+          var meta = '';
+          if (art.title)     meta += '<p>Title: <em>' + esc(art.title) + '</em></p>';
+          if (art.medium)    meta += '<p>Medium: ' + esc(art.medium) + '</p>';
+          if (art.dimension) meta += '<p>Dimension:&nbsp; ' + esc(art.dimension) + '</p>';
+          if (art.year)      meta += '<p>Year: ' + art.year + '</p>';
+          return '<div class="work-card">' +
+            '<img class="artwork-img" src="' + esc(art.image_url) + '" alt="' + esc(art.title) + (art.year ? ', ' + art.year : '') + '" loading="lazy">' +
+            '<div class="artwork-meta">' + meta + '</div>' +
+            '</div>';
+        }).join('');
+
+        dotsWrap.innerHTML = artworks.map(function (_, i) {
+          return '<button class="dot' + (i === 0 ? ' active' : '') + '" aria-label="Artwork ' + (i + 1) + '" onclick="scrollToCard(' + i + ')"></button>';
+        }).join('');
+
+        var liveCards = Array.from(trackEl.querySelectorAll('.work-card'));
+        var liveDots  = document.querySelectorAll('#workDots .dot');
+
+        window.scrollToCard = function (i) {
+          trackEl.scrollTo({ left: liveCards[i].offsetLeft - 32, behavior: 'smooth' });
+        };
+
+        trackEl.addEventListener('scroll', function () {
+          var best = 0, bestDist = Infinity;
+          var origin = trackEl.getBoundingClientRect().left;
+          liveCards.forEach(function (card, i) {
+            var dist = Math.abs(card.getBoundingClientRect().left - origin);
+            if (dist < bestDist) { bestDist = dist; best = i; }
+          });
+          liveDots.forEach(function (d, i) { d.classList.toggle('active', i === best); });
+        });
+      });
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  })();
 </script>
 
 </body>
