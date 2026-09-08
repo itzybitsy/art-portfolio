@@ -6,6 +6,7 @@
   <title>Admin — Itzy Ramirez Art</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
 
     body {
       font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -526,7 +527,7 @@
     var alreadyVisible = document.getElementById('adminWrap').classList.contains('visible');
     document.getElementById('loginWrap').hidden = true;
     document.getElementById('adminWrap').classList.add('visible');
-    window.scrollTo(0, 0);
+    requestAnimationFrame(function () { window.scrollTo(0, 0); });
     if (freshLogin) {
       freshLogin = false;
       showWelcomeToast();
