@@ -103,6 +103,13 @@
     .btn-success   { background: #16a34a; color: #fff; }
     .welcome-msg   { text-align: center; padding: 12px 0 4px; font-size: 15px; color: #16a34a; font-weight: 600; animation: fadeUp 0.4s ease; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .welcome-toast {
+      position: fixed; top: 62px; left: 50%; transform: translateX(-50%);
+      background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a;
+      padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      animation: fadeUp 0.35s ease;
+    }
     .btn-secondary { background: #ebebeb; color: #222; }
     .btn-secondary:hover { background: #e0e0e0; }
     .btn-danger    { background: #fde8e8; color: #b91c1c; }
@@ -500,6 +507,8 @@
   var sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
   // ── Auth state ──
+  var freshLogin = false;
+
   sb.auth.onAuthStateChange(function (event, session) {
     if (session) {
       showAdmin();
@@ -516,8 +525,25 @@
   function showAdmin() {
     document.getElementById('loginWrap').hidden = true;
     document.getElementById('adminWrap').classList.add('visible');
+    window.scrollTo(0, 0);
+    if (freshLogin) {
+      freshLogin = false;
+      showWelcomeToast();
+    }
     loadArtworks();
     loadAbout();
+  }
+
+  function showWelcomeToast() {
+    var toast = document.createElement('div');
+    toast.className = 'welcome-toast';
+    toast.textContent = 'Welcome back, Itzy! ✨';
+    document.body.appendChild(toast);
+    setTimeout(function () {
+      toast.style.transition = 'opacity 0.4s ease';
+      toast.style.opacity = '0';
+      setTimeout(function () { toast.remove(); }, 450);
+    }, 2500);
   }
 
   // Login form
@@ -537,10 +563,7 @@
       btn.disabled = false;
       btn.textContent = 'Sign In';
     } else {
-      btn.textContent = '✓ Signed in';
-      btn.classList.add('btn-success');
-      msgEl.innerHTML = '<div class="welcome-msg">Welcome back, Itzy! ✨</div>';
-      setTimeout(function () { showAdmin(); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 1400);
+      freshLogin = true;
     }
   });
 
