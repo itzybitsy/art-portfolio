@@ -523,6 +523,7 @@
   }
 
   function showAdmin() {
+    var alreadyVisible = document.getElementById('adminWrap').classList.contains('visible');
     document.getElementById('loginWrap').hidden = true;
     document.getElementById('adminWrap').classList.add('visible');
     window.scrollTo(0, 0);
@@ -530,8 +531,10 @@
       freshLogin = false;
       showWelcomeToast();
     }
-    loadArtworks();
-    loadAbout();
+    if (!alreadyVisible) {
+      loadArtworks();
+      loadAbout();
+    }
   }
 
   function showWelcomeToast() {
@@ -564,6 +567,7 @@
       btn.textContent = 'Sign In';
     } else {
       freshLogin = true;
+      showAdmin();
     }
   });
 
