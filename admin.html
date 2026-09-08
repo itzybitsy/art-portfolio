@@ -510,17 +510,31 @@
   // ── Auth state ──
   var freshLogin = false;
 
+  var freshLogout = false;
+
   sb.auth.onAuthStateChange(function (event, session) {
     if (session) {
       showAdmin();
     } else {
-      showLogin();
+      showLogin(freshLogout);
+      freshLogout = false;
     }
   });
 
-  function showLogin() {
+  function showLogin(showLogoutToast) {
     document.getElementById('loginWrap').hidden = false;
     document.getElementById('adminWrap').classList.remove('visible');
+    if (showLogoutToast) {
+      var toast = document.createElement('div');
+      toast.className = 'welcome-toast';
+      toast.textContent = 'You have logged out';
+      document.body.appendChild(toast);
+      setTimeout(function () {
+        toast.style.transition = 'opacity 0.4s ease';
+        toast.style.opacity = '0';
+        setTimeout(function () { toast.remove(); }, 450);
+      }, 2500);
+    }
   }
 
   function showAdmin() {
@@ -573,6 +587,7 @@
   });
 
   document.getElementById('logoutBtn').addEventListener('click', function () {
+    freshLogout = true;
     sb.auth.signOut();
   });
 
